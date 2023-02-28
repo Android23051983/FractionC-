@@ -1,7 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using static System.Console;
 Fraction fraction = new Fraction(3,4);
-WriteLine(fraction.ToString());
+Fraction f1 = new Fraction("123/456");
+Fraction f2 = new Fraction();
+Write($"дробь {fraction.ToString()} + дробь {f1.ToString()} равно ");
+Fraction.DelegateMethod(fraction, f1);
+var HashCode = f2.GetHashCode();
+
+
+
+
+MessageHash handler = delegate (int mes)
+{
+    Write(mes.ToString()+ " ");
+    WriteLine("Анонимный метод");
+};
+handler(HashCode);
+delegate void MessageHash(int message);
 internal class Fraction {
     /// <summary>
     /// Class attributes/members
@@ -97,12 +112,8 @@ internal class Fraction {
             if (strValue[i] == '/')
                 break;
 
-        if (i == strValue.Length)       // if string is not in the form of a fraction
-                                        // then it is double or integer
+        if (i == strValue.Length)       
             return (Convert.ToDouble(strValue));
-        //return ( ToFraction( Convert.ToDouble(strValue) ) );
-
-        // else string is in the form of Numerator/Denominator
         long iNumerator = Convert.ToInt64(strValue.Substring(0, i));
         long iDenominator = Convert.ToInt64(strValue.Substring(i + 1));
         return new Fraction(iNumerator, iDenominator);
@@ -125,7 +136,7 @@ internal class Fraction {
                     double dTemp = dValue;
                     long iMultiple = 1;
                     string strTemp = dValue.ToString();
-                    while (strTemp.IndexOf("E") > 0)    // if in the form like 12E-9
+                    while (strTemp.IndexOf("E") > 0)    
                     {
                         dTemp *= 10;
                         iMultiple *= 10;
@@ -176,9 +187,10 @@ internal class Fraction {
     }
 
 
+
     /// <summary>
     /// Operators for the Fraction object
-    /// includes -(unary), and binary opertors such as +,-,*,/
+    /// includes -(unary), and binary operators such as +,-,*,/
     /// also includes relational and logical operators such as ==,!=,<,>,<=,>=
     /// </summary>
     public static Fraction operator -(Fraction frac1) { return (Negate(frac1)); }
@@ -243,16 +255,15 @@ internal class Fraction {
 
     public static bool operator >=(Fraction frac1, Fraction frac2) { return frac1.Numerator * frac2.Denominator >= frac2.Numerator * frac1.Denominator; }
 
-
     /// <summary>
-    /// overloaed user defined conversions: from numeric data types to Fractions
+    /// overloaded user defined conversions: from numeric data types to Fractions
     /// </summary>
     public static implicit operator Fraction(long lNo) { return new Fraction(lNo); }
     public static implicit operator Fraction(double dNo) { return new Fraction(dNo); }
     public static implicit operator Fraction(string strNo) { return new Fraction(strNo); }
 
     /// <summary>
-    /// overloaed user defined conversions: from fractions to double and string
+    /// overloaded user defined conversions: from fractions to double and string
     /// </summary>
     public static explicit operator double(Fraction frac) { return frac.ToDouble(); }
 
@@ -272,7 +283,7 @@ internal class Fraction {
     public override int GetHashCode() {
         return (Convert.ToInt32((Numerator ^ Denominator) & 0xFFFFFFFF));
     }
-
+   
     /// <summary>
     /// internal function for negation
     /// </summary>
@@ -295,13 +306,18 @@ internal class Fraction {
             }
         }
         catch (OverflowException) {
-            throw new FractionException("Overflow occurred while performing arithemetic operation");
+            throw new FractionException("Overflow occurred while performing arithmetic operation");
         }
         catch (Exception) {
-            throw new FractionException("An error occurred while performing arithemetic operation");
+            throw new FractionException("An error occurred while performing arithmetic operation");
         }
     }
+    public static void DelegateMethod(Fraction f1, Fraction f2) 
+    {
+        Write(Add(f1, f2));
+        WriteLine(" Worked out DelegateMethod");
 
+    }
     private static Fraction Multiply(Fraction frac1, Fraction frac2) {
         try {
             checked {
@@ -311,10 +327,10 @@ internal class Fraction {
             }
         }
         catch (OverflowException) {
-            throw new FractionException("Overflow occurred while performing arithemetic operation");
+            throw new FractionException("Overflow occurred while performing arithmetic operation");
         }
         catch (Exception) {
-            throw new FractionException("An error occurred while performing arithemetic operation");
+            throw new FractionException("An error occurred while performing arithmetic operation");
         }
     }
 
@@ -328,7 +344,7 @@ internal class Fraction {
 
         do {
             if (iNo1 < iNo2) {
-                long tmp = iNo1;  // swap the two operands
+                long tmp = iNo1;  
                 iNo1 = iNo2;
                 iNo2 = tmp;
             }
@@ -352,13 +368,12 @@ internal class Fraction {
             frac.Numerator /= iGCD;
             frac.Denominator /= iGCD;
 
-            if (frac.Denominator < 0)   // if -ve sign in denominator
+            if (frac.Denominator < 0)   
             {
-                //pass -ve sign to numerator
                 frac.Numerator *= -1;
                 frac.Denominator *= -1;
             }
-        } // end try
+        } 
         catch (Exception exp) {
             throw new FractionException("Cannot reduce Fraction: " + exp.Message);
         }
@@ -371,4 +386,5 @@ public class FractionException : Exception {
     public FractionException(string Message) : base(Message) { }
 
     public FractionException(string Message, Exception InnerException) : base(Message, InnerException) { }
-}   
+}
+   
