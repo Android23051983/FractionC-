@@ -59,7 +59,7 @@ internal class Fraction {
     }
 
     /// <summary>
-    /// Properites
+    /// Properties
     /// </summary>
     public long Denominator {
         get { return m_iDenominator; }
@@ -338,7 +338,6 @@ internal class Fraction {
     /// The function returns GCD of two numbers (used for reducing a Fraction)
     /// </summary>
     private static long GCD(long iNo1, long iNo2) {
-        // take absolute values
         if (iNo1 < 0) iNo1 = -iNo1;
         if (iNo2 < 0) iNo2 = -iNo2;
 
